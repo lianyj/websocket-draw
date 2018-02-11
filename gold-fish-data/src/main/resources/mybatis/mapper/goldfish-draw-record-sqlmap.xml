@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjtachao.fish.goldfish.data.mapper.GoldFishDrawRecordInfoMapper" >
+    <resultMap id="drawRecordResultMap" type="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishDrawRecordInfoRo" >
+        <id column="ID" property="id" />
+        <result column="USER_CODE" property="userCode"  />
+        <result column="RECORD_CODE" property="recordCode"  />
+        <result column="ROOM_CODE" property="roomCode"  />
+        <result column="RECORD_STATE" property="recordState"  />
+        <result column="DRAW_NUMBER" property="drawNumber"  />
+        <result column="CREATE_TIME" property="createTime"  />
+        <result column="MODIFY_TIME" property="modifyTime"  />
+        <result column="DELETE_FLAG" property="deleteFlag"  />
+    </resultMap>
+
+
+
+    <!--创建抽奖记录 -->
+    <insert id="createDrawRecordInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishDrawRecordInfo">
+        INSERT INTO
+        gf_draw_record_info
+        (RECORD_CODE,USER_CODE,ROOM_CODE,RECORD_STATE,DRAW_NUMBER, CREATE_TIME , MODIFY_TIME , DELETE_FLAG)
+        VALUES
+        (#{recordCode},#{userCode},#{roomCode},#{recordState},#{drawNumber},#{createTime},#{modifyTime},#{deleteFlag})
+    </insert>
+
+
+
+
+    <!--  删除抽奖记录 -->
+    <update id="deleteDrawRecordInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishDrawRecordInfo">
+        UPDATE
+        gf_draw_record_info a
+        SET
+        a.DELETE_FLAG = 1,
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND		a.ROOM_CODE = #{roomCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		a.RECORD_CODE = #{recordCode}
+        </if>
+        <if test="recordState != null and recordState != ''">
+            AND		a.RECORD_STATE = #{recordState}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		a.USER_CODE = #{userCode}
+        </if>
+    </update>
+
+
+    <sql id="Base_Column_List" >
+        ID,USER_CODE, RECORD_CODE,ROOM_CODE,RECORD_STATE,DRAW_NUMBER,CREATE_TIME  , MODIFY_TIME  ,DELETE_FLAG
+    </sql>
+
+    <!-- 查询抽奖记录列表 -->
+    <select id="queryDrawRecordInfoList" resultMap="drawRecordResultMap" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        gf_draw_record_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND		ROOM_CODE = #{roomCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+        <if test="recordState != null and recordState != ''">
+            AND		RECORD_STATE = #{recordState}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+        ORDER BY CREATE_TIME DESC
+        <if test="pageSize != null and pageSize != 0 ">
+            LIMIT #{startNum},#{pageSize}
+        </if>
+    </select>
+
+    <!--查询抽奖记录数量 -->
+    <select id="queryDrawRecordInfoCount" resultType="java.lang.Long" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        count(*)
+        FROM
+        gf_draw_record_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND		ROOM_CODE = #{roomCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+        <if test="recordState != null and recordState != ''">
+            AND		RECORD_STATE = #{recordState}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+
+    </select>
+
+    <!-- 查询单个抽奖记录-->
+    <select id="querySingleDrawRecordInfo" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" resultMap="drawRecordResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        gf_draw_record_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND		ROOM_CODE = #{roomCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+        <if test="recordState != null and recordState != ''">
+            AND		RECORD_STATE = #{recordState}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjtachao.fish.goldfish.data.mapper.GoldFishUserInfoMapper" >
+    <resultMap id="userResultMap" type="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishUserInfoRo" >
+        <id column="ID" property="id" />
+        <result column="USER_CODE" property="userCode"  />
+        <result column="USER_NICKNAME" property="userNickName"  />
+        <result column="USER_IMG" property="userImg" />
+        <result column="UNION_ID" property="unionId" />
+        <result column="OPEN_ID" property="openId" />
+        <result column="SEX" property="sex" />
+        <result column="CITY" property="city" />
+        <result column="PROVINCE" property="province" />
+        <result column="COUNTRY" property="country" />
+        <result column="LOGIN_TYPE" property="loginType" />
+        <result column="LOGIN_TIME" property="loginTime"  />
+        <result column="CREATE_TIME" property="createTime"  />
+        <result column="MODIFY_TIME" property="modifyTime"  />
+        <result column="DELETE_FLAG" property="deleteFlag"  />
+    </resultMap>
+
+
+
+
+    <!-- 创建用户信息-->
+    <insert id="createUser" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserInfo">
+        INSERT INTO
+        gf_user_info
+        (USER_CODE,USER_NICKNAME,USER_IMG, OPEN_ID, UNION_ID ,
+        SEX,CITY,PROVINCE,COUNTRY,
+        LOGIN_TIME,LOGIN_TYPE, CREATE_TIME , MODIFY_TIME , DELETE_FLAG)
+        VALUES
+        (#{userCode},#{userNickName},#{userImg},#{openId},#{unionId},
+        #{sex},#{city},#{province},#{country},
+        #{loginTime},#{loginType},#{createTime},#{modifyTime},#{deleteFlag})
+    </insert>
+
+
+    <!-- 修改用户信息 -->
+    <update id="updateUser" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserInfo">
+        UPDATE
+        gf_user_info a
+        SET
+        <if test="userNickName != null ">
+            a.USER_NICKNAME = #{userNickName},
+        </if>
+        <if test="userImg != null ">
+            a.USER_IMG = #{userImg},
+        </if>
+        <if test="openId != null ">
+            a.OPEN_ID = #{openId},
+        </if>
+        <if test="unionId != null ">
+            a.UNION_ID = #{unionId},
+        </if>
+        <if test="loginType != null">
+            a.LOGIN_TYPE = #{loginType},
+        </if>
+        <if test="loginTime != null ">
+            a.LOGIN_TIME = #{loginTime},
+        </if>
+        <if test="sex != null ">
+            a.SEX = #{sex},
+        </if>
+        <if test="city != null ">
+            a.CITY = #{city},
+        </if>
+        <if test="province != null ">
+            a.PROVINCE = #{province},
+        </if>
+        <if test="country != null ">
+            a.COUNTRY = #{country},
+        </if>
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="userCode != null">
+            AND		a.USER_CODE = #{userCode}
+        </if>
+    </update>
+
+
+    <sql id="Base_Column_List" >
+        ID, USER_CODE,USER_NICKNAME,USER_IMG, OPEN_ID, UNION_ID ,SEX,CITY,PROVINCE,COUNTRY,LOGIN_TIME,LOGIN_TYPE, CREATE_TIME  , MODIFY_TIME  ,DELETE_FLAG
+    </sql>
+
+    <!-- 查询列表用户信息-->
+    <select id="queryUserList" resultMap="userResultMap" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+          gf_user_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	   USER_CODE = #{userCode}
+        </if>
+        <if test="openId != null and openId != ''">
+            AND	   OPEN_ID = #{openId}
+        </if>
+        <if test="unionId != null and unionId != ''">
+            AND	   UNION_ID = #{unionId}
+        </if>
+
+    </select>
+
+    <!-- 查询用户数量 -->
+    <select id="queryUserCount" resultType="java.lang.Long" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+           count(*)
+        FROM
+        gf_user_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	   USER_CODE = #{userCode}
+        </if>
+        <if test="openId != null and openId != ''">
+            AND	   OPEN_ID = #{openId}
+        </if>
+        <if test="unionId != null and unionId != ''">
+            AND	   UNION_ID = #{unionId}
+        </if>
+
+    </select>
+
+    <!-- 查询单个用户信息-->
+    <select id="querySingleUser" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" resultMap="userResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+          gf_user_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	   USER_CODE = #{userCode}
+        </if>
+        <if test="openId != null and openId != ''">
+            AND	   OPEN_ID = #{openId}
+        </if>
+        <if test="unionId != null and unionId != ''">
+            AND	   UNION_ID = #{unionId}
+        </if>
+    </select>
+
+
+</mapper>

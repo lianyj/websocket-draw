@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjtachao.fish.goldfish.data.mapper.GoldFishRoomInfoMapper" >
+    <resultMap id="roomResultMap" type="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishRoomInfoRo" >
+        <id column="ID" property="id" />
+        <result column="USER_CODE" property="userCode"  />
+        <result column="ROOM_CODE" property="roomCode"  />
+        <result column="ROOM_STATE" property="roomState"  />
+        <result column="CREATE_TIME" property="createTime"  />
+        <result column="MODIFY_TIME" property="modifyTime"  />
+        <result column="DELETE_FLAG" property="deleteFlag"  />
+    </resultMap>
+
+
+
+    <!-- 创建房间 -->
+    <insert id="createRoomInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishRoomInfo">
+        INSERT INTO
+        gf_room_info
+        (USER_CODE,ROOM_CODE,ROOM_STATE, CREATE_TIME , MODIFY_TIME , DELETE_FLAG)
+        VALUES
+        (#{userCode},#{roomCode},#{roomState},#{createTime},#{modifyTime},#{deleteFlag})
+    </insert>
+
+
+    <!-- 修改房间 -->
+    <update id="updateRoomInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishRoomInfo">
+        UPDATE
+        gf_room_info a
+        SET
+        <if test="roomState != null ">
+            a.ROOM_STATE = #{roomState},
+        </if>
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="roomCode != null">
+            AND		a.ROOM_CODE = #{roomCode}
+        </if>
+        <if test="userCode != null">
+            AND		a.USER_CODE = #{userCode}
+        </if>
+    </update>
+
+
+    <!-- 删除房间 -->
+    <update id="deleteRoomInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishRoomInfo">
+        UPDATE
+        gf_room_info a
+        SET
+        a.DELETE_FLAG = #{deleteFlag},
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="roomCode != null">
+            AND		a.ROOM_CODE = #{roomCode}
+        </if>
+        <if test="userCode != null">
+            AND		a.USER_CODE = #{userCode}
+        </if>
+    </update>
+
+
+    <sql id="Base_Column_List" >
+        ID,USER_CODE, ROOM_CODE,ROOM_STATE,CREATE_TIME  , MODIFY_TIME  ,DELETE_FLAG
+    </sql>
+
+    <!-- 查询房间列表-->
+    <select id="queryRoomInfoList" resultMap="roomResultMap" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+          gf_room_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   ROOM_CODE = #{roomCode}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+    </select>
+
+    <!-- 查询用户数量 -->
+    <select id="queryRoomInfoCount" resultType="java.lang.Long" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+           count(*)
+        FROM
+        gf_room_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   ROOM_CODE = #{roomCode}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	  USER_CODE = #{userCode}
+        </if>
+
+    </select>
+
+    <!-- 查询单个用户信息-->
+    <select id="querySingleRoomInfo" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" resultMap="roomResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+          gf_room_info
+        WHERE 1=1
+        AND DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   ROOM_CODE = #{roomCode}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	  USER_CODE = #{userCode}
+        </if>
+    </select>
+
+
+</mapper>

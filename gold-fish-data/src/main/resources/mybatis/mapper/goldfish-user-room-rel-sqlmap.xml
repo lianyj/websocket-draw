@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjtachao.fish.goldfish.data.mapper.GoldFishUserRoomRelMapper" >
+    <resultMap id="userRoomRelResultMap" type="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishUserRoomRelRo" >
+        <id column="ID" property="id" />
+        <result column="USER_CODE" property="userCode"  />
+        <result column="ROOM_CODE" property="roomCode"  />
+        <result column="CREATE_TIME" property="createTime"  />
+        <result column="MODIFY_TIME" property="modifyTime"  />
+        <result column="DELETE_FLAG" property="deleteFlag"  />
+    </resultMap>
+
+
+
+
+    <!-- 创建用户房间关联-->
+    <insert id="createUserRoomRel" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserRoomRel">
+        INSERT INTO
+        gf_user_room_rel
+        (USER_CODE,ROOM_CODE, CREATE_TIME , MODIFY_TIME , DELETE_FLAG)
+        VALUES
+        (#{userCode},#{roomCode},#{createTime},#{modifyTime},#{deleteFlag})
+    </insert>
+
+
+
+    <!-- 查询用户房间关联 -->
+    <select id="queryUserRoomRelList" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" resultMap="userRoomRelResultMap" >
+        SELECT
+        a.ID, a.USER_CODE,a.ROOM_CODE , a.CREATE_TIME , a.MODIFY_TIME  ,a.DELETE_FLAG
+        FROM
+        gf_user_room_rel a
+        INNER JOIN gf_user_info b ON a.USER_CODE=b.USER_CODE
+        INNER JOIN gf_room_info c ON a.ROOM_CODE=c.ROOM_CODE
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        AND b.DELETE_FLAG=0
+        AND c.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   a.ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	   a.USER_CODE = #{userCode}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   a.ROOM_CODE = #{roomCode}
+        </if>
+
+    </select>
+
+
+    <!--  删除用户房间关联  -->
+    <update id="deleteUserRoomRel" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserRoomRel">
+        UPDATE
+        gf_user_room_rel a
+        SET
+        a.DELETE_FLAG = #{deleteFlag},
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND	   a.USER_CODE = #{userCode}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   a.ROOM_CODE = #{roomCode}
+        </if>
+    </update>
+
+
+
+    <!-- 查询房间所有用户   -->
+    <select id="queryRoomUserList" resultType="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishUserInfoRo" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        a.ID id, a.USER_CODE userCode,a.USER_NICKNAME userNickName,a.USER_IMG userImg
+        FROM
+        gf_user_info a
+        INNER JOIN gf_user_room_rel b ON a.USER_CODE=b.USER_CODE
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        AND b.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   b.ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		b.USER_CODE = #{userCode}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   b.ROOM_CODE = #{roomCode}
+        </if>
+
+    </select>
+
+
+
+    <!-- 查询房间所有用户数量   -->
+    <select id="queryRoomUserCount" resultType="java.lang.Long" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        count(*)
+        FROM
+        gf_user_info a
+        INNER JOIN gf_user_room_rel b ON a.USER_CODE=b.USER_CODE
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        AND b.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   b.ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		b.USER_CODE = #{userCode}
+        </if>
+        <if test="roomCode != null and roomCode != ''">
+            AND	   b.ROOM_CODE = #{roomCode}
+        </if>
+
+    </select>
+</mapper>

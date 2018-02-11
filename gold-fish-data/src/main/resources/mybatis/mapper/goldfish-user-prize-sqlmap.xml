@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjtachao.fish.goldfish.data.mapper.GoldFishUserPrizeInfoMapper" >
+    <resultMap id="userPrizeResultMap" type="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishUserPrizeInfoRo" >
+        <id column="ID" property="id" />
+        <result column="RECORD_CODE" property="recordCode"  />
+        <result column="USER_CODE" property="userCode"  />
+        <result column="CREATE_TIME" property="createTime"  />
+        <result column="MODIFY_TIME" property="modifyTime"  />
+        <result column="DELETE_FLAG" property="deleteFlag"  />
+    </resultMap>
+
+
+    <!-- 创建用户中奖名单 -->
+    <insert id="createUserPrizeInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserPrizeInfo">
+        INSERT INTO
+        gf_user_prize_info
+        (RECORD_CODE,USER_CODE, CREATE_TIME , MODIFY_TIME , DELETE_FLAG)
+        VALUES
+        (#{recordCode},#{userCode},#{createTime},#{modifyTime},#{deleteFlag})
+    </insert>
+
+
+
+    <!-- 删除用户中奖名单 -->
+    <update id="deleteUserPrizeInfo" parameterType="com.zjtachao.fish.goldfish.data.pojo.domain.GoldFishUserPrizeInfo">
+        UPDATE
+        gf_user_prize_info a
+        SET
+        a.DELETE_FLAG = 1,
+        a.MODIFY_TIME = #{modifyTime}
+        WHERE 	1=1
+        <if test="id != null">
+            AND		a.Id = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		a.USER_CODE = #{userCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		a.RECORD_CODE = #{recordCode}
+        </if>
+    </update>
+
+
+    <sql id="Base_Column_List" >
+        ID, RECORD_CODE,USER_CODE,CREATE_TIME  , MODIFY_TIME  ,DELETE_FLAG
+    </sql>
+
+    <!-- 查询用户中奖名单列表 -->
+    <select id="queryUserPrizeInfoList" resultMap="userPrizeResultMap" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        gf_user_prize_info
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+        ORDER BY CREATE_TIME ASC
+    </select>
+
+    <!-- 查询用户中奖名单数量 -->
+    <select id="queryUserPrizeInfoCount" resultType="java.lang.Long" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+           count(*)
+        FROM
+        gf_user_prize_info
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+
+    </select>
+
+    <!-- 查询单个用户中奖名单-->
+    <select id="querySingleUserPrizeInfo" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" resultMap="userPrizeResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        gf_user_prize_info
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		USER_CODE = #{userCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		RECORD_CODE = #{recordCode}
+        </if>
+
+    </select>
+
+
+
+    <!-- 查询中奖名单 用户列表   -->
+    <select id="queryPrizeUserList" resultType="com.zjtachao.fish.goldfish.data.pojo.ro.GoldFishUserInfoRo" parameterType="com.zjtachao.fish.water.common.base.bean.WaterBootBaseSo" >
+        SELECT
+        a.ID id, a.USER_CODE userCode,a.USER_NICKNAME userNickName,a.USER_IMG userImg
+        FROM
+        gf_user_info a
+        INNER JOIN gf_user_prize_info b ON a.USER_CODE=b.USER_CODE
+        WHERE 1=1
+        AND a.DELETE_FLAG=0
+        AND b.DELETE_FLAG=0
+        <if test="id != null and id != ''">
+            AND	   b.ID = #{id}
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND		b.USER_CODE = #{userCode}
+        </if>
+        <if test="recordCode != null and recordCode != ''">
+            AND		b.RECORD_CODE = #{recordCode}
+        </if>
+        ORDER BY b.CREATE_TIME ASC
+    </select>
+
+</mapper>
